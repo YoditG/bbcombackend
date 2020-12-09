@@ -15,12 +15,13 @@ commentsRouter.post('/:id/addcomment',async (req,res)=>{
     }
     
     try{
-    const comment = await new Comment(commentData)
-    var getCommentId;
-    await Comment.create(comment,async function (err, comment){
+        const comment = await new Comment(commentData)
+        var getCommentId;
+        await Comment.create(comment,async function (err, comment){
         //Post.findByIdAndUpdate({id},{ $push: {comments:comment._id}})
         let pop_comment,newPost;
         if (err){
+            console.log(err)
             return res.send(err)
         }else{// populate and add to data in frontend
             try{
@@ -30,7 +31,7 @@ commentsRouter.post('/:id/addcomment',async (req,res)=>{
                     new: true,
                     runValidators: true
                   })
-                res.status(200).send({pop_comment,newPost})
+                return res.status(200).send({pop_comment,newPost})
                
             }catch(e){
                 console.log({populateCommentUpdatePost: e.message})
