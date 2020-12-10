@@ -18,7 +18,7 @@ commentsRouter.post('/:id/addcomment',async (req,res)=>{
         const comment = await new Comment(commentData)
         var getCommentId;
         await Comment.create(comment,async function (err, comment){
-        //Post.findByIdAndUpdate({id},{ $push: {comments:comment._id}})
+       
         let pop_comment,newPost;
         if (err){
             console.log(err)
@@ -37,7 +37,6 @@ commentsRouter.post('/:id/addcomment',async (req,res)=>{
                 console.log({populateCommentUpdatePost: e.message})
             }
 
-            //await Post.findByIdAndUpdate({id},{ $push: {comments:comment._id}}).populate('')
         }
     })
 

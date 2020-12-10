@@ -1,0 +1,16 @@
+POST http://localhost:3000/auth/register
+
+content-type: application/json
+
+{
+    "first_name": "Yodit",
+    "last_name": "Gebreheneras",
+    "username": "Moedddesdfsdfe",
+    "birth_date":"1/1/2122",
+    "email": "yodit@developers.de",
+    "role": "baller",
+    "password": "notYourBizasdasdfdfsdz",
+    "last_password_reset": "1/1/2121",
+    "last_login": "1/1/2121",
+    "profilePic": "babyelephant.png"
+}

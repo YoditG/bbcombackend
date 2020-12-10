@@ -2,7 +2,6 @@ var express = require('express');
 const Baller = require('../models/ballerSchema');
 var router = express.Router();
 const client = require('./../client/client')
-const userMiddlewares = require('./../middlewares/userMiddlewares')
 const User = require('./../models/userSchema')
 const Team = require('./../models/teamSchema');
 const Post = require('../models/postSchema');
@@ -48,10 +47,6 @@ router.get('/:id/profile', async function(req, res, next) {
     })
 
    res.send(userData)
-})
-
-router.post('/register',userMiddlewares.checkUser,(req,res)=>{
-  res.send('user registered')
 })
 
 
