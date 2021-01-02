@@ -21,7 +21,6 @@ module.exports.register = async (req,res)=>{
     console.log(password)
 
     try {
-        console.log('hallooooooooooo')
         let user = await User.findOne({ username })
         if (user) return res.status(400).send('This user already exists')
         // student = await Student.create({ first_name, last_name, course, email, password })

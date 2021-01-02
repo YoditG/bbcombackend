@@ -1,56 +1,59 @@
 var express = require('express');
 const Baller = require('../models/ballerSchema');
-var router = express.Router();
+var userRouter = express.Router();
 const client = require('./../client/client')
 const User = require('./../models/userSchema')
 const Team = require('./../models/teamSchema');
 const Post = require('../models/postSchema');
 const Comment = require('../models/commentSchema')
+const authorizeUser = require('../middlewares/authMiddleware')
 
 /* GET users listing. */
-router.get('/:id/profile', async function(req, res, next) {
-  const userData = {}
+userRouter.get('/:id/profile',authorizeUser, async function(req, res, next) {
+  // const userData = {}
   const { id } = req.params
 
   try {
-      userData.user = await User.findById(id)
+      const user = await User.findById(id)
+      const posts = await Post
+      .find({"user_id": id})
+      .populate('poster_id')
+      .populate({ 
+        path: 'comments',
+        model: 'Comment',
+        populate: {
+          path: 'user_id',
+          model: 'User',
+        }
+      })
     } catch (e) {
       console.log({findUserError: e.message})
     }
-
-  if(userData.user.role.includes('baller')) {
+  let baller;
+  let team;
+  if(user.role.includes('baller')) {
     try {
-      userData.baller = await Baller.findOne({'user_id': userData.user._id })
+      baller = await Baller.findOne({'user_id': user._id })
     } catch (e)  {
       console.log({findBallerError: e.message})
     }
 
-    if (userData.baller.team_id) {
+    if (baller.team_id) {
       try {
-        userData.team = await Team.findById(userData.baller.team_id)
+        team = await Team.findById(baller.team_id)
       } catch (e) {
         console.log({findTeamError: e.message})
       }
     }
   }
 
-   userData.posts = await Post
-    .find({"user_id": id})
-    .populate('poster_id')
-    .populate({ 
-      path: 'comments',
-      model: 'Comment',
-      populate: {
-        path: 'user_id',
-        model: 'User',
-      }
-    })
+   
 
-   res.send(userData)
+   res.send({user,posts,baller,team})
 })
 
 
-router.post('/posts',async (req,res)=>{
+userRouter.post('/posts',async (req,res)=>{
   const {user_id,
   poster_id,
   date,
@@ -76,4 +79,4 @@ router.post('/posts',async (req,res)=>{
   // console.log(newPost)
 })
 
-module.exports = router;
+module.exports = userRouter;
