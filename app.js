@@ -1,18 +1,18 @@
 require('dotenv').config()
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
 const cors = require('cors')
 const likesRouter = require('./routes/likesRouter')
 const commentsRouter = require('./routes/commentsRouter')
 const authUser = require('./routes/authUser')
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
 
-var app = express();
+const app = express();
 
 app.use(express.static(path.join(__dirname, 'uploads')));
 
@@ -31,6 +31,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/auth', authUser)
 app.use('/users',likesRouter)
+app.use('/users',function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", 'http://www.localhost:3001'); // update to match the domain you will make the request from
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 app.use('/users', usersRouter);
 app.use('/users',commentsRouter)
 app.use('/', indexRouter);
@@ -39,6 +44,8 @@ app.use('/', indexRouter);
 app.use(function(req, res, next) {
   next(createError(404));
 });
+
+
 
 // error handler
 app.use(function(err, req, res, next) {

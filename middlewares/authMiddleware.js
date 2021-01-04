@@ -7,9 +7,11 @@ const authorizeUser = (req, res, next) => {
     
     if (!token) return res.status(401).send('You shall not pass!')
 
+    console.log("hallo, hier bin ich")
+
     jwt.verify(token, process.env.MY_SECRET, (err, payload) => {
         if (err) return res.status(403).send('Invalid token!')
-        req.userPayload = payload
+        //req.userPayload = payload
         next();
     })
 }

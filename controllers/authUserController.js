@@ -11,7 +11,7 @@ exports.login = async (req, res) => {
     
     const match = await bcrypt.compare(password, user.password)
     if (!match) return res.status(400).send('Invalid Credentials') // bad request
-    const token = user.createToken()
+    const token = user.createToken() 
 
     
     // if(user.role.includes('baller')) {
@@ -37,4 +37,12 @@ exports.login = async (req, res) => {
             res.set('x-authorization-token', token).send({user})
         
 
+}
+
+exports.userData = async (req,res)=>{
+    const {id} = req.params;
+    const user = await User.findById(id)
+    if (!user) return res.status(400).send('Invalid Credentials').redirect('/login')
+
+    return res.send({user})
 }

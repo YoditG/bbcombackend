@@ -6,7 +6,9 @@ const User = require('./../models/userSchema')
 const Team = require('./../models/teamSchema');
 const Post = require('../models/postSchema');
 const Comment = require('../models/commentSchema')
-const authorizeUser = require('../middlewares/authMiddleware')
+const authorizeUser = require('../middlewares/authMiddleware');
+const { userData } = require('../controllers/authUserController');
+
 
 /* GET users listing. */
 userRouter.get('/:id/profile',authorizeUser, async function(req, res, next) {
@@ -78,5 +80,7 @@ userRouter.post('/posts',async (req,res)=>{
 
   // console.log(newPost)
 })
+
+userRouter.get('/:id/userData',authorizeUser,userData)
 
 module.exports = userRouter;
