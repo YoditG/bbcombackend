@@ -10,7 +10,7 @@ const commentsRouter = require('./routes/commentsRouter')
 const authUser = require('./routes/authUser')
 
 const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
+const userRouter = require('./routes/users');
 
 const app = express();
 
@@ -18,7 +18,7 @@ app.use(express.static(path.join(__dirname, 'uploads')));
 
 
 // view engine setup
-app.use(cors({exposedHeaders: 'x-authorization-token'}))
+app.use(cors({exposedHeaders: 'x-authorization-token, Authorization'}))
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -31,12 +31,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/auth', authUser)
 app.use('/users',likesRouter)
+app.use('/users', userRouter);
 app.use('/users',function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", 'http://www.localhost:3001'); // update to match the domain you will make the request from
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.setHeader("Access-Control-Allow-Origin", 'http://localhost:3001'); // update to match the domain you will make the request from
+  res.header("Access-Control-Allow-Headers", "Authorization");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
   next();
 });
-app.use('/users', usersRouter);
+//Access-Control-Allow-Origin: 'http://www.localhost:3001'
+//Access-Control-Allow-Methods: GET, POST, PUT, DELETE
+//Access-Control-Allow-Headers: Authorization
+
 app.use('/users',commentsRouter)
 app.use('/', indexRouter);
 
