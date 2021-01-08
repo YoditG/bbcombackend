@@ -6,15 +6,29 @@ const bcrypt = require('bcrypt')
 exports.login = async (req, res) => {
     const { username, password } = req.body
     const user = await User.findOne({ username })
-    
+    //console.log(username)
     if (!user) return res.status(400).send('Invalid Credentials')
     
     const match = await bcrypt.compare(password, user.password)
     if (!match) return res.status(400).send('Invalid Credentials') // bad request
     const token = user.createToken() 
-
     
-    // if(user.role.includes('baller')) {
+
+    res.set('x-authorization-token', token).send({user})
+}
+
+exports.userData = async (req,res)=>{
+    const {id} = req.params;
+    const user = await User.findById(id)
+    if (!user) return res.status(400).send('Invalid Credentials').redirect('/login')
+
+    return res.send({user})
+}
+
+
+
+
+// if(user.role.includes('baller')) {
     
     //     try {
     //         baller = await Baller.findOne({'user_id': user._id })
@@ -34,15 +48,3 @@ exports.login = async (req, res) => {
     //     }
     
     // }
-            res.set('x-authorization-token', token).send({user})
-        
-
-}
-
-exports.userData = async (req,res)=>{
-    const {id} = req.params;
-    const user = await User.findById(id)
-    if (!user) return res.status(400).send('Invalid Credentials').redirect('/login')
-
-    return res.send({user})
-}
