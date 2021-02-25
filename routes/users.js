@@ -1,7 +1,7 @@
 var express = require('express');
 const Baller = require('../models/ballerSchema');
 var userRouter = express.Router();
-const client = require('./../client/client')
+//const client = require('./../client/client')
 const User = require('./../models/userSchema')
 const Team = require('./../models/teamSchema');
 const Post = require('../models/postSchema');
@@ -14,10 +14,11 @@ const { userData } = require('../controllers/authUserController');
 userRouter.get('/:id/profile',authorizeUser, async function(req, res, next) {
   // const userData = {}
   const { id } = req.params
-
+  let user
+  let posts
   try {
-      const user = await User.findById(id)
-      const posts = await Post
+      user = await User.findById(id)
+      posts = await Post
       .find({"user_id": id})
       .populate('poster_id')
       .populate({ 
